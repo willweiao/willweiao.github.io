@@ -1,0 +1,12 @@
+baseURL = 'https://willweiao.github.io/'
+languageCode = 'en-us'
+title = 'My New Hugo Site'
+theme = "PaperMod"
+
+[params]
+  ShowCodeCopyButtons = true
+  math = true
+
+[caches]
+  [caches.images]
+    dir = ':cacheDir/images'
