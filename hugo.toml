@@ -15,3 +15,16 @@ theme = "PaperMod"
 [caches]
   [caches.images]
     dir = ':cacheDir/images'
+
+[params.profileMode]
+  enabled = true
+  title = "Hi, I'm Will"
+  subtitle = "Optimization · Algorithms · ML · Python"
+  imageUrl = "images/catgif.gif"  
+  imageWidth = 120
+  imageHeight = 120
+  buttons = [
+    { name = "Blog", url = "/posts" },
+    { name = "Projects", url = "#projects" },
+    { name = "GitHub", url = "https://github.com/willweiao" }
+  ]
