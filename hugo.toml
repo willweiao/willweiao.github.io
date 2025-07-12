@@ -5,6 +5,10 @@ theme = "PaperMod"
 
 [params]
   ShowCodeCopyButtons = true
+  homeInfoParams = true
+  ShowReadingTime = true
+  ShowShareButtons = true
+  ShowPostNavLinks = true
   ShowToc = true
   math = true
 
