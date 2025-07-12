@@ -7,6 +7,8 @@ math=true
 toc= true
 +++
 
+This post documents a small personal project I recently completed, where I explored the idea of using machine learning to assist Gurobi parameter tuning. It covers the motivation behind the idea, how I set up the experiment, what worked (and didn’t), and what I learned along the way.
+
 ## 1. Introduction: Why Should We Use Machine Learning to Tune Gurobi?
 
 Gurobi is widely regarded as one of the most powerful commercial solvers for mixed-integer programming (MIP). It is fast, robust, and highly configurable. But this configurability comes at a cost: Gurobi exposes over **100 parameters** that users can adjust, ranging from cutting plane aggressiveness (`Cuts`), heuristics intensity (`Heuristics`), presolve behavior (`Presolve`), to branching strategies (`VarBranch`) and solving methods (`Method`, `Threads`).
@@ -41,13 +43,19 @@ In addition to providing high-quality instance files in standard formats (`.mps`
 
 ### 3.2 Parameter Configurations
 
-To simplify the tuning landscape, I defined a **fixed set of 27 parameter configurations**, each corresponding to a meaningful variation of key Gurobi parameters. These include:
+To simplify the tuning landscape, I defined a **fixed set of 27 parameter configurations** and a **baseline parameter configuration**, each corresponding to a meaningful variation of key Gurobi parameters. These include:
 
 - `Cuts`: controls cut generation level. Use value 0 to shut off cuts, 1 for moderate cut generation, 2 for aggressive cut generation, and 3 for very aggressive cut generation (ignored in the project). The default -1 value chooses automatically. 
 - `Presolve`: toggles presolving strategies. A value of -1 corresponds to an automatic setting. Other options are off (0), conservative (1), or aggressive (2) (ignored in the project). More aggressive application of presolve takes more time, but can sometimes lead to a significantly tighter model.  
 - `MIPFocus`: allows you to modify your high-level solution strategy, depending on your goals. By default, the Gurobi MIP solver strikes a balance between finding new feasible solutions and proving that the current solution is optimal. If you are more interested in good quality feasible solutions, you can select `MIPFocus=1`. If you believe the solver is having no trouble finding the optimal solution, and wish to focus more attention on proving optimality, select `MIPFocus=2`. It also has a level of `MIPFocus=3` to choose when the best objective bound is moving very slowly in the extremal case. For the simificity of this project I ignored this case.
 
-Each MIPLIB instance was solved using **all 27 configurations**, and the following solver outputs were recorded for each run:
+Notice that Gurobi offers a large number of parameters that can be tuned to influence solver behavior. You can find the full list on the [reference page](https://docs.gurobi.com/projects/optimizer/en/current/reference/parameters.html). For this project, I selected a subset of parameters as tuning targets based on suggestions from the [guidelines page](https://docs.gurobi.com/projects/optimizer/en/current/concepts/parameters/guidelines.html).
+
+Ideally, I would include all of the key parameters mentioned in the guidelines to build a more complete tuning space. However, doing so would lead to an exponential explosion in the number of parameter combinations. To keep the experiment tractable, I limited the tuning space to just three parameters: `MIPFocus`, `Presolve`, and `Cuts`.
+
+While this simplification made the data generation process more manageable, I also acknowledge that it might be one of the reasons the models struggled to learn meaningful patterns during training.
+
+Each MIPLIB instance was solved using **all 27 configurations** and also on **baseline parameter configuration**, and the following solver outputs were recorded for each run:
 
 - **Runtime** (in seconds)
 - **Optimality gap** (if applicable)
