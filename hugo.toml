@@ -24,7 +24,8 @@ theme = "PaperMod"
   imageWidth = 120
   imageHeight = 120
   buttons = [
+     { name = "About", url = "/about" },
     { name = "Blog", url = "/posts" },
-    { name = "Projects", url = "#projects" },
+    { name = "Projects", url = "/projects" },
     { name = "GitHub", url = "https://github.com/willweiao" }
   ]
