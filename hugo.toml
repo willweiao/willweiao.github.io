@@ -5,6 +5,7 @@ theme = "PaperMod"
 
 [params]
   ShowCodeCopyButtons = true
+  ShowToc = true
   math = true
 
 [caches]
