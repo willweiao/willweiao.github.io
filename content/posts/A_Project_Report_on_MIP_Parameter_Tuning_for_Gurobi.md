@@ -4,7 +4,10 @@ draft = false
 title = 'A Project Report on MIP Parameter Tuning for Gurobi'
 summary= 'This is a report on my project MIP Parameter Tuning for Gurobi'
 math=true
-toc= true
+showToc= true
+
+tags = ["Tuning", "Gurobi", "Mixed Integer Programming"]
+categories = ["Optimization", "ML", "Research"]
 +++
 
 This post documents a small personal project I recently completed, where I explored the idea of using machine learning to assist Gurobi parameter tuning. It covers the motivation behind the idea, how I set up the experiment, what worked (and didn’t), and what I learned along the way.
