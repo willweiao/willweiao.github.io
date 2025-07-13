@@ -2,7 +2,7 @@
 date = '2025-07-11T22:29:42+02:00'
 draft = false
 title = 'Combating Sparse Rewards in Reinforcement Learning with Simulation-Based Reward Signals'
-subtitle = 'How I used card battle simulations to guide RL agents without hand-crafting dense rewards'
+summary = 'How I used card battle simulations to guide RL agents without hand-crafting dense rewards'
 +++
 
 This post is a short follow-up to one of my projects—a simple turn-based card battle simulator. I've been a fan of Slay the Spire for a long time, and I've often wondered how its gameplay could be connected to reinforcement learning—things like training self-play agents or building systems that help guide player decisions. This write-up explores some of those ideas, especially how they relate to sparse rewards, and how that line of thinking eventually led to the project itself.
