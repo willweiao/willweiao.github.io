@@ -97,7 +97,7 @@ $$
 1. We say that \\( x,\lambda, \mu\\) satisfies a *second-order necessary optimality conditions(CQ2)* if for all \\(d \in T_+(g,h,x,\lambda)\\) there exists an open interval \\(J \supset \lbrace 0 \rbrace\\) and a twice continuously differentiable curve \\( \gamma: J \rarr \mathbb{R}^n\\) such that:
 
 $$
-\gamma (0) =x, \gamma^'(0)=d, g_{\mathcal{A}_0(x, d)}(\gamma (t))=0, h(\gamma (t))=0 \quad \all t\in J, t\geq 0, 
+\gamma (0) =x, \gamma^'(0)=d, g_{\mathcal{A}_0(x, d)}(\gamma (t))=0, h(\gamma (t))=0 \quad \forall t\in J, t\geq 0, 
 $$
 
 where \\(\mathcal{A}_0(x, d):=\lbrace i \in \mathcal{A}(x); \nabla g_i(x)^Td=0 \rbrace\\).
@@ -243,11 +243,10 @@ with positive definite H. The idea of active set methods is to estimate the acti
 
 $$
 \begin{aligned}
-\min_{x \in \mathbb{R}^n} \quad & \frac{1}{2} x^T H x + c^T x \\\\
-\text{s.t.} \quad & A_{\mathcal{A}_k} x = -\alpha_{\mathcal{A}_k}, \\\\
-& B x = -\beta
+\min_{x \in \mathbb{R}^n}  \quad \frac{1}{2}& x^T H x + c^T x \\\\
+\text{s.t.} \quad  A_{\mathcal{A_k}}&  x = -\alpha_{\mathcal{A_k}}, \\\\
+ B x  & = -\beta
 \end{aligned}
 $$
 
 This results in a method where we solve a series of equality constrained quadratic problems.
-
