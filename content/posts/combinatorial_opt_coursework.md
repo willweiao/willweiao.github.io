@@ -117,7 +117,7 @@ $$
 
 Then solve the IP relaxation:
 
-![Graph for IP relaxation](\images\graph02.png)
+![Graph for IP relaxation](/images/graph02.png)
 
 - each job j: random variable \\(X_j = t - \frac{1}{2}\\) with probability \\(\frac{y_{jt}^\ast}{p_j}\\)
 
