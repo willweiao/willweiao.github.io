@@ -139,6 +139,95 @@ The [plots](https://github.com/willweiao/classic-optimization-methods-lab/tree/m
 
 In this short project, I explored three foundational optimization algorithms—Gradient Descent, Newton's Method, and BFGS. While Newton's method excels near optima with rapid convergence, BFGS offers a robust and efficient alternative without explicit second derivatives. Gradient Descent, though simpler, often requires significantly more iterations. This experience underscored the practical trade-offs of choosing optimization methods, highlighting BFGS as a versatile and reliable option for typical use cases. For codes and detailed experiments and results please be free to check on my [project](https://github.com/willweiao/classic-optimization-methods-lab). Again it's not a formal project and I am plan to add more methods that the textbook didn't mentioned but useful in practice to it and also extend this post. If you have any questions or any thoughts, please contact me via e-mails or start a issue in that repository. Thank you for reading!
 
+## (Update Part) Demonstration: KKT Conditions and the Penalty Method
+
+To demonstrate an understanding of **constrained nonlinear optimization**, this project includes a demo solving a problem and verifying it against the Karush-Kuhn-Tucker (KKT) conditions.
+
+### The Problem
+- **Minimize:** \\(f(x, y) = (x - 2)² + (y - 2)²\\)
+- **Subject to:** \\(g(x, y) = x² + y² - 1 ≤ 0\\)
+
+The analytical solution, found by applying the KKT conditions, is \\((x, y) = (1/√2, 1/√2)\\).
+
+### The Numerical Method
+The problem was solved numerically using the **Penalty Method**. This transforms the constrained problem into a series of unconstrained problems of the form:
+\\[
+    P(x) = f(x) + ρ * max(0, g(x))²
+\\]
+
+This new problem \\(P(x)\\) was then solved using the implemented Gradient Descent algorithm for increasing values of the penalty parameter \\(ρ\\).
+
+### Results
+#### Original test and the problems
+As \\(ρ\\) increases, the numerical results are shown in the following table: (see in [log03](https://github.com/willweiao/classic-optimization-methods-lab/blob/main/log/log_03.txt))
+
+| Rho (ρ) | Numerical Solution         | Error (Distance to KKT point) |  Converged Iterations  |
+|---------|----------------------------|-------------------------------|------------------------|
+| 1       | [0.89816091, 0.89816095]   | 0.270191                      |   31 iterations        |                
+| 10      | [0.73679149, 0.73679161]   | 0.041981                      |  123 iterations        |
+| 100     | [0.71030916, 0.71030929]   | 0.004529                      | 1087 iterations        |
+| 1000    | [0.70099022, 0.71383061]   | 0.009090                      |not coverged in max_iter|
+| 10000   | [0.5330758, 0.84608049]    | 0.222712                      |not coverged in max_iter|
+
+As we can notice, the numerical solution **didn't converges** to the true KKT point as \\(ρ\\) increases after 100. Conversely it behaves even worse when \\(ρ\\) rises to 10000. 
+
+We can see the issue clearly by this following plot:
+
+![plot for test](/images/constrained.png)
+
+This was because the Hessian matrix of this penalized objective function P(x) becomes increasingly ill-conditioned when we increase the penalty parameter \\(ρ\\). 
+- When we have a low \\(ρ\\), the objective function looks like a smooth valley (f(x)), with a gentle, sloping penalty wall that starts at the constraint boundary, and the optimizer can easily find its way down the slope and settle at the bottom;
+- But when \\(ρ\\) goes very high, The original valley \\(f(x)\\) is now almost irrelevant. The landscape is dominated by the penalty term \\(ρ * max(0, g(x))²\\). This creates an incredibly steep wall—almost a vertical cliff—at the constraint boundary \\(g(x) = 0\\).
+
+More specifically:
+
+- Just one step outside the feasible region (the unit circle), the gradient of the penalty term becomes enormous \\(2 * ρ * g(x) * grad_g(x)\\).
+- The algorithm calculates the huge gradient, which points sharply inwards. The search direction \\(p\\) = -gradient is a massive vector pointing across the valley.
+- The update step \\(x + alpha * p\\) causes the algorithm to leap completely over the narrow feasible region and land on the other side of the canyon wall. In the next iteration, it sees another huge gradient pointing back in the opposite direction. The optimizer starts bouncing from one side of the constraint boundary to the other, never settling in the middle.
+- Tiny Step Sizes: The backtracking line search tries to prevent this. It sees that a full step (alpha = 1.0) makes the objective value much worse (because it overshot). So, it starts shrinking alpha (alpha *= 0.8). To make any progress in such a steep canyon, it has to shrink alpha to a minuscule value.
+- The algorithm is still making progress, but each step is now incredibly tiny. It is crawling down the canyon wall so slowly that it exhausts the max_iter limit before it can reach the tolerance tol.
+
+That leads to the technique which I used to fix it.
+
+#### Enhancement test
+
+Use a warm start. The solution for \\(\rho=100\\) is a very good starting point for the \\(\rho=1000\\) problem. This is a standard technique in numerical optimization. Just look like this:
+
+```python
+x0 = np.array([2.0, 0.0]) # Initial starting point
+last_solution = x0
+
+for rho in rho_values:
+    # ... create penalty_problem ...
+    
+    # Use the solution from the previous, easier problem as the starting point
+    # for the current, harder problem. This is a "warm start".
+    solution, history, _ = gradient_descent.solve(penalty_problem, last_solution, max_iter=2000)
+    
+    last_solution = solution # Update for the next loop
+```
+
+Then the results shown as following: (see in [log04](https://github.com/willweiao/classic-optimization-methods-lab/blob/main/log/log_04.txt))
+
+| Rho (ρ) | Numerical Solution         | Error (Distance to KKT point) |  Converged Iterations  |
+|---------|----------------------------|-------------------------------|------------------------|
+| 1       | [0.89816091, 0.89816095]   | 0.270191                      |   31 iterations        |                
+| 10      | [0.73679155, 0.73679155]   | 0.041981                      |   41 iterations        |
+| 100     | [0.71030922, 0.71030922]   | 0.004529                      |   31 iterations        |
+| 1000    | [0.7074297, 0.7074297]     | 0.000457                      |   41 iterations        |
+| 10000   | [0.7071391, 0.7071391]     | 0.000046                      |not coverged in max_iter|
+
+You can see the difference here. Even though when \\(ρ =10000\\) it still not converged, but we can see the numerical solution **perfectly converges** to the KKT point and Error goes to 0 as \\(p\\) increases.
+
+And the plots further illustrates the difference clearly:
+
+![plot for enhancement](/images/constrained_with_warm_start.png)
+
+### Quick summary
+This demonstration shows how to solve a constrained nonlinear problem by implementing the Penalty Method. The numerical solution, found using a custom Gradient Descent solver, is shown to converge to the true optimal point derived analytically from the KKT conditions. The demonstration also highlights the practical challenge of ill-conditioning that arises with large penalty values, a key concept in numerical optimization.
+
+
+
 
 
 
