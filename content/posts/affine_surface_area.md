@@ -1,6 +1,6 @@
 +++
 date = '2025-07-18T13:23:28+02:00'
-draft = true
+draft = false
 title = 'Affine surface area is affine invariant'
 summary = 'This post is a extra script from my presentation in the seminar: Convex Geometry.'
 math = true
