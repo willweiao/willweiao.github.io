@@ -55,43 +55,43 @@ x_{k+1} = x_k - \alpha_k \left[ \nabla^2 f(x_k) \right]^{-1}\nabla f(x_k)
 Here, \\( \nabla^2 f(x_k) \\) is the Hessian matrix (second-order derivatives). In practice, instead of explicitly computing the inverse Hessian, we solve the linear system:
 
 \\[
-\nabla^2 f(x_k)\, p_k = -\nabla f(x_k)
+\nabla^2 f(x_k) p_k = -\nabla f(x_k)
 \\]
 
 In my implementation, I used a straightforward Newton step without line search (setting \\(\alpha_k = 1\\)), meaning the update directly follows the solved direction. While simple and extremely fast when close to the solution, this approach can struggle if the starting point is far or the Hessian is ill-conditioned.
 
 ### 1.3 BFGS Method
 
-The BFGS method is a popular quasi-Newton approach that approximates the Hessian matrix iteratively, avoiding direct computation of second derivatives. At each iteration, it updates the approximate inverse Hessian \( H_k \) using gradient differences.
+The BFGS method is a popular quasi-Newton approach that approximates the Hessian matrix iteratively, avoiding direct computation of second derivatives. At each iteration, it updates the approximate inverse Hessian \\( H_k \\) using gradient differences.
 
 The update step is given by:
 
-\[
+\\[
 x_{k+1} = x_k + \alpha_k p_k,\quad \text{where } p_k = -H_k \nabla f(x_k)
-\]
+\\]
 
-I used a backtracking line search with Armijo condition (same as gradient descent), initializing \(\alpha = 1.0\), and reducing it by \(0.8\) each iteration if needed.
+I used a backtracking line search with Armijo condition (same as gradient descent), initializing \\(\alpha = 1.0\\), and reducing it by \\(0.8\\) each iteration if needed.
 
-If the curvature condition \(\mathbf{y}_k^\top \mathbf{s}_k > 10^{-10}\) fails, the algorithm terminates early to avoid numerical instability.
+If the curvature condition \\(\mathbf{y}_k^\top \mathbf{s}_k > 10^{-10}\\) fails, the algorithm terminates early to avoid numerical instability.
 
 ## 2 Test Problems & Setup
 
 I tested the optimization methods on two classic problems:
 
 - **Rosenbrock function** (nonconvex, challenging for gradient-based methods):
-\[
+\\[
 f(x, y) = (1 - x)^2 + 100(y - x^2)^2
-\]
+\\]
 
 - **Quadratic function** (convex, ideal for testing Newton’s method):
-\[
+\\[
 f(x, y) = x^2 + 2y^2
-\]
+\\]
 
 ### Setup:
 
-- **Initial point**: \((0, 0)\)
-- **Tolerance**: \(\|\nabla f(x)\| \leq 10^{-6}\)
+- **Initial point**: \\((0, 0)\\)
+- **Tolerance**: \\(\|\nabla f(x)\| \leq 10^{-6}\\)
 - **Maximum iterations**: 100
 - **Metrics recorded**: Objective values, gradient norms, and iteration count.
 
