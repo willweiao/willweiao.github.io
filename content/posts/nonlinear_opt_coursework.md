@@ -102,14 +102,14 @@ $$
 
 where \\(\mathcal{A}_0(x, d):=\lbrace i \in \mathcal{A}(x); \nabla g_i(x)^Td=0 \rbrace\\).
 
-2. Let f, g, h be twice continuously differentiable. Suppose that \\(\bar(x)\\) is a local solution where the GCQ holds. Then there exist Langrange multipliers \\(\bar(\lambda) \in \mathbb{R}^m\\) and \\(\bar(\mu) \in \mathbb{R}^p\\) with:
+2. Let f, g, h be twice continuously differentiable. Suppose that \\(\bar{x}\\) is a local solution where the GCQ holds. Then there exist Langrange multipliers \\(\bar{\lambda} \in \mathbb{R}^m\\) and \\(\bar{\mu} \in \mathbb{R}^p\\) with:
 
 $$
 \begin{aligned}
-& \text{(a)} \quad \nabla_x L(\bar(x), \bar(\lambda), \bar(\mu))=0,\\\\
-& \text{(b)} \quad h(\bar(x))=0,\\\\
-& \text{(c)} \quad \bar(\lambda) \geq 0, g(\bar(x)) \leq 0, \bar(\lambda)^Tg(\bar(x)) = 0,\\\\
-& \text{(d)} \quad \text{if CQ2 is satisfied, then: }d^T\nabla_xx L(\bar(x), \bar(\lambda), \bar(\mu))d \geq 0 \quad \text{for all}d \in T_+(g,h, \bar(x), \bar(\lambda)).
+& \text{(a)} \quad \nabla_x L(\bar{x}, \bar{\lambda}, \bar{\mu})=0,\\\\
+& \text{(b)} \quad h(\bar{x})=0,\\\\
+& \text{(c)} \quad \bar{\lambda} \geq 0, g(\bar{x}) \leq 0, \bar{\lambda}^Tg(\bar{x}) = 0,\\\\
+& \text{(d)} \quad \text{if CQ2 is satisfied, then: }d^T\nabla_xx L(\bar{x}, \bar{\lambda}, \bar{\mu})d \geq 0 \quad \text{for all}d \in T_+(g,h, \bar{x}, \bar{\lambda}).
 \end{aligned}
 $$
 
